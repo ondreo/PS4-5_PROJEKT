@@ -98,13 +98,11 @@ public class BstTree {
             if(whichChild.equals("left")) parent.setLeftChild(currVertex.getLeftChild());
             else if(whichChild.equals("right")) parent.setRightChild(currVertex.getLeftChild());
             else this.startVertex = currVertex.getLeftChild();
-            //System.out.println("tutaj");
         }
         else if(currVertex.hasRightChild()) {
             if(whichChild.equals("left")) parent.setLeftChild(currVertex.getRightChild());
             else if(whichChild.equals("right")) parent.setRightChild(currVertex.getRightChild());
             else this.startVertex = currVertex.getRightChild();
-            //currVertex = null;
         }
     }
 
@@ -112,35 +110,37 @@ public class BstTree {
     private TreeVertex findSuccessor(TreeVertex currVertex, TreeVertex parent) {
         parent = currVertex;
         currVertex = currVertex.getRightChild();
+        String whichChild = "right";
         while(currVertex.hasLeftChild()) {
             parent = currVertex;
             currVertex = currVertex.getLeftChild();
+            whichChild = "left";
         }
-        if(currVertex.hasRightChild()) {
-            parent.setLeftChild(currVertex.getRightChild());
+        if(currVertex.hasRightChild()) {//można ifa i elsa uprościć do tego pierwszego
+            if(whichChild.equals("left")) parent.setLeftChild(currVertex.getRightChild());
+            else if(whichChild.equals("right")) parent.setRightChild(currVertex.getRightChild());
+        }
+        else {
+            if(whichChild.equals("left")) parent.setLeftChild(null);
+            else if(whichChild.equals("right")) parent.setRightChild(null);
         }
         return currVertex;
     }
 
-
-    private Boolean isEmpty() {//czy przy usuwaniu i szukaniu nie będzie to potrzebne??
-        if(this.startVertex == null)
-            return true;
-        return false;
+    public int countCitiesByPrefix(String name) {
+        //
+        return 0;
     }
 
-    static int counter = 0;
+    @Override
     public String toString() {
-        /*if(++counter == 2) {
-            System.out.println("here");
-        }*/
         ArrayList<TreeVertex>q = new ArrayList<>();
         String out = "";
         TreeVertex currVertex = this.startVertex;
         q.add(currVertex);
         while(!q.isEmpty()) {
             currVertex = q.remove(0);
-            //System.out.println(currVertex);
+            //System.out.println(currVertex.getName());
             out += currVertex.getName() + " ";
             if(currVertex.hasLeftChild()) q.add(currVertex.getLeftChild());
             if(currVertex.hasRightChild()) q.add(currVertex.getRightChild());
