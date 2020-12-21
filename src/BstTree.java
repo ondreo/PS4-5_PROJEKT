@@ -127,9 +127,53 @@ public class BstTree {
         return currVertex;
     }
 
-    public int countCitiesByPrefix(String name) {
-        //
-        return 0;
+    //static int counter;
+    public int countCitiesByPrefix(String prefix, TreeVertex currVertex) {
+        int counter = 0;
+        if(currVertex == null) {
+            return 0;
+        }
+
+
+        if(isItAPrefix(prefix,currVertex.getName()) <= 0) {
+            counter += countCitiesByPrefix(prefix, currVertex.getLeftChild());
+            if(counter > 100)
+                return counter;
+        }
+//        if(prefix.compareTo(currVertex.getName()) >= 0) {
+        if(isItAPrefix(prefix,currVertex.getName()) >= 0) {
+            counter += countCitiesByPrefix(prefix,currVertex.getRightChild());
+            if(counter > 100)
+                return counter;
+        }
+        if(isItAPrefix(prefix,currVertex.getName()) == 0) {
+            return counter + 1;
+        }
+
+        return counter;
+    }
+
+    private int isItAPrefix(String prefix,String name) {
+        if(prefix.length() <= name.length()) {
+//            return prefix.compareTo(name.substring(0, prefix.length()));
+            int compare = prefix.compareTo(name.substring(0, prefix.length()));
+            if(compare < 0) return -1;
+            if(compare == 0) return 0;
+            if(compare > 0) return 1;
+        }
+        else return -2;
+        //else return -10_000;
+
+
+        return -3;
+    }
+
+    //TODO:
+    //change to AVL (RR,LL,RL,LR)
+
+
+    public TreeVertex getStartVertex() {
+        return startVertex;
     }
 
     @Override
