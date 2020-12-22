@@ -155,13 +155,18 @@ public class BstTree {
 
     private int isItAPrefix(String prefix,String name) {
         if(prefix.length() <= name.length()) {
-//            return prefix.compareTo(name.substring(0, prefix.length()));
+            //return prefix.compareTo(name.substring(0, prefix.length()));
             int compare = prefix.compareTo(name.substring(0, prefix.length()));
             if(compare < 0) return -1;
             if(compare == 0) return 0;
             if(compare > 0) return 1;
         }
-        else return -2;
+        else {
+            int compare = prefix.substring(0,name.length()).compareTo(name);
+            if(compare < 0) return -1;
+            //if(compare == 0) return 0;
+            if(compare >= 0) return 1;
+        }
         //else return -10_000;
 
 
@@ -170,6 +175,9 @@ public class BstTree {
 
     //TODO:
     //change to AVL (RR,LL,RL,LR)
+    private void RR() {
+        ;//
+    }
 
 
     public TreeVertex getStartVertex() {
