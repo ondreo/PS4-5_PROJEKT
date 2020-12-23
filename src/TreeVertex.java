@@ -4,10 +4,13 @@ public class TreeVertex {
     private TreeVertex leftChild;
     private TreeVertex rightChild;
 
+    private int height;
+
     public TreeVertex(String name) {
         this.name = name;
         //this.depthLevel = 0;
         leftChild = rightChild = null;
+        height = 0;
     }
 
     /*public TreeVertex(TreeVertex x) {//konstruktor kopiujący
@@ -46,5 +49,13 @@ public class TreeVertex {
     }
     public void setRightChild(TreeVertex rightChild) {
         this.rightChild = rightChild;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 }

@@ -8,12 +8,11 @@ public class BstTree {
         //vertices = new TreeVertex[Main.MAX_N+1];
     }
 
-    //public void add(TreeVertex x) {
-    public void add(String name) throws NameException {
+    public String add(String name) {
         TreeVertex currVertex = this.startVertex;
         if(this.startVertex == null) {
             startVertex = new TreeVertex(name);
-            return;
+            return "TAK";
         }
         while(currVertex != null) {
             /**
@@ -22,21 +21,29 @@ public class BstTree {
             if(name.compareTo(currVertex.getName()) < 0) {
                 if(currVertex.getLeftChild() == null) {
                     currVertex.setLeftChild(new TreeVertex(name));
-                    return;
+                    //TODO:
+                    //wprowadź zmiany do AVL
+                    //co jeśli wierzchołek to początek?
+                    return "TAK";
                 }
                 else currVertex = currVertex.getLeftChild();
             }
             else if(name.compareTo(currVertex.getName()) > 0) {
                 if(currVertex.getRightChild() == null) {
                     currVertex.setRightChild(new TreeVertex(name));
-                    return;
+                    //TODO:
+                    //wprowadź zmiany do AVL
+                    //co jeśli wierzchołek to początek?
+                    return "TAK";
                 }
                 else currVertex = currVertex.getRightChild();
             }
             else {
-                throw new NameException("Given city name already exists!");
+                return "NIE";
             }
         }
+        //return "NIE";
+        return "";//??
     }
 
     public TreeVertex findCity(String name) {
@@ -175,10 +182,16 @@ public class BstTree {
 
     //TODO:
     //change to AVL (RR,LL,RL,LR)
-    private void RR() {
-        ;//
-    }
+    private void leftRotaion(TreeVertex x) {
+        TreeVertex y = x.getRightChild();
+        TreeVertex T2 = y.getLeftChild();
 
+        y.setLeftChild(x);
+        x.setRightChild(T2);
+
+        y.setHeight(Math.max(y.getLeftChild().getHeight(),y.getRightChild().getHeight())+1);
+        x.setHeight(Math.max(x.getLeftChild().getHeight(),x.getRightChild().getHeight())+1);
+    }
 
     public TreeVertex getStartVertex() {
         return startVertex;
