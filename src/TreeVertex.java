@@ -1,16 +1,13 @@
 public class TreeVertex {
     private String name;
-    //private int depthLevel;
     private TreeVertex leftChild;
     private TreeVertex rightChild;
-
     private int height;
 
     public TreeVertex(String name) {
         this.name = name;
-        //this.depthLevel = 0;
         leftChild = rightChild = null;
-        height = 0;
+        this.height = 1;
     }
 
     /*public TreeVertex(TreeVertex x) {//konstruktor kopiujący

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
+import java.util.Stack;
 
 public class BstTree {
     private TreeVertex startVertex;
@@ -9,41 +10,74 @@ public class BstTree {
     }
 
     public String add(String name) {
+        Stack<TreeVertex>stack = new Stack<>();
+        //TreeVertex lastTreeVertex;
+
         TreeVertex currVertex = this.startVertex;
         if(this.startVertex == null) {
             startVertex = new TreeVertex(name);
             return "TAK";
         }
         while(currVertex != null) {
+            stack.add(currVertex);
             /**
              * wstawiany wierzchołek jest mniejszy leksykograficznie od aktualnego
              */
             if(name.compareTo(currVertex.getName()) < 0) {
                 if(currVertex.getLeftChild() == null) {
                     currVertex.setLeftChild(new TreeVertex(name));
-                    //TODO:
-                    //wprowadź zmiany do AVL
-                    //co jeśli wierzchołek to początek?
+                    balanceTheTree(currVertex, stack);
                     return "TAK";
                 }
-                else currVertex = currVertex.getLeftChild();
+                else {
+                    currVertex = currVertex.getLeftChild();
+                }
             }
             else if(name.compareTo(currVertex.getName()) > 0) {
                 if(currVertex.getRightChild() == null) {
                     currVertex.setRightChild(new TreeVertex(name));
-                    //TODO:
-                    //wprowadź zmiany do AVL
-                    //co jeśli wierzchołek to początek?
+                    balanceTheTree(currVertex, stack);
                     return "TAK";
                 }
-                else currVertex = currVertex.getRightChild();
+                else {
+                    currVertex = currVertex.getRightChild();
+                }
             }
             else {
-                return "NIE";
+                return "NIE";//stos automatycznie się opróżni
             }
+
         }
         //return "NIE";
         return "";//??
+    }
+
+    private void balanceTheTree(TreeVertex currVertex ,Stack<TreeVertex>stack) {
+        TreeVertex x;
+        while(!stack.empty()) {
+            x = stack.peek();
+            stack.pop();
+            x.setHeight(Math.max(x.getLeftChild().getHeight(),x.getRightChild().getHeight())+1);
+            int balance = x.getLeftChild().getHeight()-x.getRightChild().getHeight();
+            if (balance > 1) {
+                if (currVertex.getName().compareTo(x.getLeftChild().getName()) < 0) {//LL case
+                    rightRotation(x);
+                }
+                else {//LR case
+                    leftRotaion(x.getLeftChild());
+                    rightRotation(x);
+                }
+            }
+            else if (balance < -1) {
+                if (currVertex.getName().compareTo(x.getRightChild().getName()) > 0) {//RR case
+                    leftRotaion(x);
+                }
+                else {//RL case
+                    rightRotation(x.getRightChild());
+                    leftRotaion(x);
+                }
+            }
+        }
     }
 
     public TreeVertex findCity(String name) {
@@ -188,6 +222,17 @@ public class BstTree {
 
         y.setLeftChild(x);
         x.setRightChild(T2);
+
+        y.setHeight(Math.max(y.getLeftChild().getHeight(),y.getRightChild().getHeight())+1);
+        x.setHeight(Math.max(x.getLeftChild().getHeight(),x.getRightChild().getHeight())+1);
+    }
+
+    private void rightRotation(TreeVertex x) {
+        TreeVertex y = x.getLeftChild();
+        TreeVertex T2 = y.getRightChild();
+
+        y.setRightChild(x);
+        x.setLeftChild(T2);
 
         y.setHeight(Math.max(y.getLeftChild().getHeight(),y.getRightChild().getHeight())+1);
         x.setHeight(Math.max(x.getLeftChild().getHeight(),x.getRightChild().getHeight())+1);
