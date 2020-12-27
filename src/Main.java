@@ -7,22 +7,30 @@ public class Main {
         //drzewo (póki co BST, potem dodać funkcjonalności AVL):
         BstTree tree = new BstTree();
         tree.add("Białystok");
+        //System.out.println(tree.toString());
+        //System.out.println();
+
         tree.add("Kraków");
+        //System.out.println(tree.toString());
+        //System.out.println();
+
         tree.add("Krak");
+        //System.out.println(tree.toString());
+        //System.out.println();
+
         tree.add("Kraz");
+        //System.out.println(tree.toString());
+        //System.out.println();
+
         tree.add("Bełchatow");
+        //System.out.println(tree.toString());
+        //System.out.println();
+
         tree.add("Baltoszewo");
+        //System.out.println(tree.toString());
+        //System.out.println();
+
         tree.add("Mońki");
-        /*tree.add("2");
-        tree.add("3");
-        tree.add("1");
-        System.out.println(tree.toString());
-        System.out.println(tree.findCity("2"));
-
-        tree.remove("2");
-        System.out.println(tree.toString());
-        System.out.println(tree.findCity("5"));*/
-
         System.out.println(tree.toString());
         System.out.println();
 
