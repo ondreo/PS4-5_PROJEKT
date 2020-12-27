@@ -52,34 +52,6 @@ public class BstTree {
         return "";//??
     }
 
-    private void balanceTheTree(TreeVertex currVertex ,Stack<TreeVertex>stack) {
-        TreeVertex x;
-        while(!stack.empty()) {
-            x = stack.peek();
-            stack.pop();
-            x.setHeight(Math.max(x.getLeftChild().getHeight(),x.getRightChild().getHeight())+1);
-            int balance = x.getLeftChild().getHeight()-x.getRightChild().getHeight();
-            if (balance > 1) {
-                if (currVertex.getName().compareTo(x.getLeftChild().getName()) < 0) {//LL case
-                    rightRotation(x);
-                }
-                else {//LR case
-                    leftRotaion(x.getLeftChild());
-                    rightRotation(x);
-                }
-            }
-            else if (balance < -1) {
-                if (currVertex.getName().compareTo(x.getRightChild().getName()) > 0) {//RR case
-                    leftRotaion(x);
-                }
-                else {//RL case
-                    rightRotation(x.getRightChild());
-                    leftRotaion(x);
-                }
-            }
-        }
-    }
-
     public TreeVertex findCity(String name) {
         TreeVertex currVertex = this.startVertex;
         while(currVertex != null) {
@@ -95,7 +67,8 @@ public class BstTree {
         }
         throw new NoSuchElementException("There is no city with given name.");//Check it's name again.
     }
-    public void remove(String name) {
+
+    public void remove(String name) {//TODO: dodać elementy AVL
         TreeVertex parent = this.startVertex;
         TreeVertex currVertex = this.startVertex;
         String whichChild = "";
@@ -214,33 +187,37 @@ public class BstTree {
         return -3;
     }
 
-    //TODO:
-    //change to AVL (RR,LL,RL,LR)
-    private void leftRotaion(TreeVertex x) {
+    private TreeVertex leftRotation(TreeVertex x) {
         TreeVertex y = x.getRightChild();
         TreeVertex T2 = y.getLeftChild();
 
         y.setLeftChild(x);
         x.setRightChild(T2);
 
-        y.setHeight(Math.max(y.getLeftChild().getHeight(),y.getRightChild().getHeight())+1);
-        x.setHeight(Math.max(x.getLeftChild().getHeight(),x.getRightChild().getHeight())+1);
+        y.setHeight(Math.max(getVertexHeight(y.getLeftChild()),getVertexHeight(y.getRightChild()))+1);
+        x.setHeight(Math.max(getVertexHeight(x.getLeftChild()),getVertexHeight(x.getRightChild()))+1);
+
+        return y;
     }
 
-    private void rightRotation(TreeVertex x) {
+    private TreeVertex rightRotation(TreeVertex x) {
         TreeVertex y = x.getLeftChild();
         TreeVertex T2 = y.getRightChild();
 
         y.setRightChild(x);
         x.setLeftChild(T2);
 
-        y.setHeight(Math.max(y.getLeftChild().getHeight(),y.getRightChild().getHeight())+1);
-        x.setHeight(Math.max(x.getLeftChild().getHeight(),x.getRightChild().getHeight())+1);
+        y.setHeight(Math.max(getVertexHeight(y.getLeftChild()),getVertexHeight(y.getRightChild()))+1);
+        x.setHeight(Math.max(getVertexHeight(x.getLeftChild()),getVertexHeight(x.getRightChild()))+1);
+
+        return y;
     }
 
     public TreeVertex getStartVertex() {
         return startVertex;
     }
+
+
 
     @Override
     public String toString() {
@@ -251,10 +228,63 @@ public class BstTree {
         while(!q.isEmpty()) {
             currVertex = q.remove(0);
             //System.out.println(currVertex.getName());
-            out += currVertex.getName() + " ";
+            //out += currVertex.getName() + " ";
+            out += currVertex.toString()+ "\n";
             if(currVertex.hasLeftChild()) q.add(currVertex.getLeftChild());
             if(currVertex.hasRightChild()) q.add(currVertex.getRightChild());
         }
         return out;
+    }
+
+    private void balanceTheTree(TreeVertex currVertex ,Stack<TreeVertex>stack) {
+        TreeVertex x;
+        while(!stack.empty()) {
+            x = stack.peek();
+            stack.pop();
+            x.setHeight(Math.max(getVertexHeight(x.getLeftChild()),getVertexHeight(x.getRightChild()))+1);
+            int balance = getVertexHeight(x.getLeftChild())-getVertexHeight(x.getRightChild());
+            if (balance > 1) {
+                if (currVertex.getName().compareTo(x.getLeftChild().getName()) < 0) {//LL case
+                    if (stack.empty()) this.startVertex = rightRotation(x);
+                    else {
+                        TreeVertex ancestor = stack.peek();
+                        if(ancestor.getLeftChild() == x) ancestor.setLeftChild(rightRotation(x));
+                        if(ancestor.getRightChild() == x) ancestor.setRightChild(rightRotation(x));
+                    }
+                }
+                else {//LR case
+                    x.setLeftChild(leftRotation(x.getLeftChild()));
+                    if (stack.empty()) this.startVertex = rightRotation(x);
+                    else {
+                        TreeVertex ancestor = stack.peek();
+                        if(ancestor.getLeftChild() == x) ancestor.setLeftChild(rightRotation(x));
+                        if(ancestor.getRightChild() == x) ancestor.setRightChild(rightRotation(x));
+                    }
+                }
+            }
+            else if (balance < -1) {
+                if (currVertex.getName().compareTo(x.getRightChild().getName()) > 0) {//RR case
+                    if (stack.empty()) this.startVertex = leftRotation(x);
+                    else {
+                        TreeVertex ancestor = stack.peek();
+                        if(ancestor.getLeftChild() == x) ancestor.setLeftChild(leftRotation(x));
+                        if(ancestor.getRightChild() == x) ancestor.setRightChild(leftRotation(x));
+                    }
+                }
+                else {//RL case
+                    x.setRightChild(rightRotation(x.getRightChild()));
+                    if (stack.empty()) this.startVertex = leftRotation(x);
+                    else {
+                        TreeVertex ancestor = stack.peek();
+                        if(ancestor.getLeftChild() == x) ancestor.setLeftChild(leftRotation(x));
+                        if(ancestor.getRightChild() == x) ancestor.setRightChild(leftRotation(x));
+                    }
+                }
+            }
+        }
+    }
+
+    private int getVertexHeight(TreeVertex v) {
+        return v!=null ? v.getHeight() : 0;
     }
 }

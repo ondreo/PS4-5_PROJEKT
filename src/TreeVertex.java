@@ -55,4 +55,19 @@ public class TreeVertex {
     public void setHeight(int height) {
         this.height = height;
     }
+
+    @Override
+    public String toString() {
+        String out = "TreeVertex{" +
+                "name='" + name + '\''
+                + ", leftChild=";
+        if(leftChild!=null) out += leftChild.getName();
+        else out += "null";
+        out += ", rightChild=";
+        if(rightChild!=null) out += rightChild.getName();
+        else out += "null";
+        out += ", height=" + height +
+                '}';
+        return out;
+    }
 }

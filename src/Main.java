@@ -23,6 +23,9 @@ public class Main {
         System.out.println(tree.toString());
         System.out.println(tree.findCity("5"));*/
 
+        System.out.println(tree.toString());
+        System.out.println();
+
         while(true) {
             System.out.println("Co chcesz zrobić?");
             System.out.println("1. Wyszukaj miasto po nazwie");//"ERROR"
@@ -30,6 +33,8 @@ public class Main {
             System.out.println("3. Usuń miasto");
             System.out.println("4. Wyszukaj miasta po prefixie");
             System.out.print("Twój wybór: ");
+
+
             String name;
             //int choice = 0;
             int choice = console.nextInt();
