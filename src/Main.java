@@ -1,36 +1,37 @@
 import java.util.Scanner;
 
 public class Main {
-    final static int MAX_N = 100;
+    //final static int MAX_N = 100;
+    static AvlTree tree;
     public static void main(String[] args) throws NameException {
         Scanner console = new Scanner(System.in);
         //drzewo (póki co BST, potem dodać funkcjonalności AVL):
-        BstTree tree = new BstTree();
-        tree.add("Białystok");
+        tree = new AvlTree();
+        tree.addVertex("Białystok");
         //System.out.println(tree.toString());
         //System.out.println();
 
-        tree.add("Kraków");
+        tree.addVertex("Kraków");
         //System.out.println(tree.toString());
         //System.out.println();
 
-        tree.add("Krak");
+        tree.addVertex("Krak");
         //System.out.println(tree.toString());
         //System.out.println();
 
-        tree.add("Kraz");
+        tree.addVertex("Kraz");
         //System.out.println(tree.toString());
         //System.out.println();
 
-        tree.add("Bełchatow");
+        tree.addVertex("Bełchatow");
         //System.out.println(tree.toString());
         //System.out.println();
 
-        tree.add("Baltoszewo");
+        tree.addVertex("Baltoszewo");
         //System.out.println(tree.toString());
         //System.out.println();
 
-        tree.add("Mońki");
+        tree.addVertex("Mońki");
         System.out.println(tree.toString());
         System.out.println();
 
@@ -48,7 +49,7 @@ public class Main {
 
 
             String tmpString = "";
-            TreeVertex tmpVertex = null;
+            City tmpCity = null;
 
             String name;
             //int choice = 0;
@@ -60,8 +61,8 @@ public class Main {
                     System.out.print("Wpisz nazwę miasta: ");
                     name = console.next();
 
-                    tmpVertex = tree.findCity(name);
-                    if(tmpVertex != null) System.out.println("TAK");
+                    tmpCity = tree.findCity(name);
+                    if(tmpCity != null) System.out.println("TAK");
                     else System.out.println("NIE");
 
                     //System.out.println("Podane miasto znajduje się w drzewie pod adresem: " + tree.findCity(name));
@@ -71,7 +72,7 @@ public class Main {
                     System.out.println("*DODAWANIE MIASTA*");
                     System.out.print("Wpisz nazwę miasta: ");
                     name = console.next();
-                    tmpString = tree.add(name);
+                    tmpString = tree.addVertex(name);
                     if(tmpString.equals("TAK")) System.out.println("Pomyślnie dodano miasto do drzewa");
                     else System.out.println("Podane miasto już istnieje");
 
@@ -84,7 +85,7 @@ public class Main {
                     System.out.println("*USUWANIE MIASTA*");
                     System.out.print("Wpisz nazwę miasta: ");
                     name = console.next();
-                    tmpString = tree.remove(name);
+                    tmpString = tree.removeVertex(name);
                     if(tmpString.equals("TAK")) System.out.println("Pomyślnie usunięto miasto z drzewa");
                     else System.out.println("Podane miasto nie istnieje!");
 
