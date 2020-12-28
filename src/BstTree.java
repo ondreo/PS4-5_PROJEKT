@@ -96,52 +96,68 @@ public class BstTree {//class sieć, net,??
             return "NIE";
         }
         if(!currVertex.hasChildren()) {
+            //v1:
+            currVertex = null;//czy to zmienia właściwy wierzchołek??
+            currVertex = parent;
+
+            /*
+            //v2:
             if(whichChild == "left") parent.setLeftChild(null);
             else if(whichChild == "right") parent.setRightChild(null);
-            else this.startVertex = null;
+            else this.startVertex = null;*/
         }
         else if(currVertex.hasLeftChild() && currVertex.hasRightChild()){
-            TreeVertex successor = findSuccessor(currVertex, parent);
-            successor.setLeftChild(currVertex.getLeftChild());
-            successor.setRightChild(currVertex.getRightChild());
-            if(whichChild.equals("left")) parent.setLeftChild(successor);
-            else if(whichChild.equals("right")) parent.setRightChild(successor);
-            else this.startVertex = successor;
-            stack.add(successor);
+            TreeVertex successor = findSuccessor(currVertex);
+            currVertex.setName(successor.getName());
+            this.remove(successor.getName());
+
+            stack.add(currVertex);
         }
         else if(currVertex.hasLeftChild()) {
+            //stack.add(currVertex);
+            //v1:
+            currVertex.setName(currVertex.getLeftChild().getName());
+            currVertex.setLeftChild(currVertex.getLeftChild().getLeftChild());
+            currVertex.setLeftChild(currVertex.getLeftChild().getRightChild());
+
+            /*
+            //v2:
             if(whichChild.equals("left")) parent.setLeftChild(currVertex.getLeftChild());
             else if(whichChild.equals("right")) parent.setRightChild(currVertex.getLeftChild());
-            else this.startVertex = currVertex.getLeftChild();
-            stack.add(currVertex.getLeftChild());
+            else this.startVertex = currVertex.getLeftChild();*/
+
+            stack.add(currVertex);
         }
         else if(currVertex.hasRightChild()) {
+            //stack.add(currVertex);
+            //v1:
+            currVertex.setName(currVertex.getRightChild().getName());
+            currVertex.setLeftChild(currVertex.getRightChild().getLeftChild());
+            currVertex.setLeftChild(currVertex.getRightChild().getRightChild());
+
+            /*
+            //v2
             if(whichChild.equals("left")) parent.setLeftChild(currVertex.getRightChild());
             else if(whichChild.equals("right")) parent.setRightChild(currVertex.getRightChild());
-            else this.startVertex = currVertex.getRightChild();
-            stack.add(currVertex.getRightChild());
+            else this.startVertex = currVertex.getRightChild();*/
+
+            stack.add(currVertex);
         }
-        //balanceTheTree();
+
+
+        //raczej currVertex jest dobrze, ale sprawdzić jeśli będzie błąd
+        balanceTheTree(currVertex,stack);
+
+
+
         return "TAK";
     }
 
 
-    private TreeVertex findSuccessor(TreeVertex currVertex, TreeVertex parent) {
-        parent = currVertex;
+    private TreeVertex findSuccessor(TreeVertex currVertex) {
         currVertex = currVertex.getRightChild();
-        String whichChild = "right";
         while(currVertex.hasLeftChild()) {
-            parent = currVertex;
             currVertex = currVertex.getLeftChild();
-            whichChild = "left";
-        }
-        if(currVertex.hasRightChild()) {//można ifa i elsa uprościć do tego pierwszego
-            if(whichChild.equals("left")) parent.setLeftChild(currVertex.getRightChild());
-            else if(whichChild.equals("right")) parent.setRightChild(currVertex.getRightChild());
-        }
-        else {
-            if(whichChild.equals("left")) parent.setLeftChild(null);
-            else if(whichChild.equals("right")) parent.setRightChild(null);
         }
         return currVertex;
     }

@@ -40,7 +40,10 @@ public class Main {
             System.out.println("2. Dodaj miasto");
             System.out.println("3. Usuń miasto");
             System.out.println("4. Wyszukaj miasta po prefixie");
-            System.out.println("5/ ");
+            System.out.println("5. Dodaj drogę pomiędzy miastami ");
+            System.out.println("6. Usuń drogę pomiędzy miastami ");
+            System.out.println("7. Znajdź najkrótszą drogę pomiędzy miastami ");
+            System.out.println("8. Oblicz, do ilu miast się skróci długość przejazdu z miasta A jeśli wybudujemy drogę pomiędzy miastami B i C ????????????");
             System.out.print("Twój wybór: ");
 
 

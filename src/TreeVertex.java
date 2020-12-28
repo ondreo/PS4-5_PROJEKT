@@ -25,6 +25,9 @@ public class TreeVertex {
     public String getName() {
         return name;
     }
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Boolean hasLeftChild() {
         if(this.leftChild != null) return true;
