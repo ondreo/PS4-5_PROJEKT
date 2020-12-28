@@ -40,8 +40,12 @@ public class Main {
             System.out.println("2. Dodaj miasto");
             System.out.println("3. Usuń miasto");
             System.out.println("4. Wyszukaj miasta po prefixie");
+            System.out.println("5/ ");
             System.out.print("Twój wybór: ");
 
+
+            String tmpString = "";
+            TreeVertex tmpVertex = null;
 
             String name;
             //int choice = 0;
@@ -52,18 +56,24 @@ public class Main {
                     System.out.println("*WYSZUKIWANIE MIASTA*");
                     System.out.print("Wpisz nazwę miasta: ");
                     name = console.next();
-                    System.out.println("Podane miasto znajduje się w drzewie pod adresem: " + tree.findCity(name));
+
+                    tmpVertex = tree.findCity(name);
+                    if(tmpVertex != null) System.out.println("TAK");
+                    else System.out.println("NIE");
+
+                    //System.out.println("Podane miasto znajduje się w drzewie pod adresem: " + tree.findCity(name));
                     break;
                 case 2:
                     //dodanie nowego miasta
                     System.out.println("*DODAWANIE MIASTA*");
                     System.out.print("Wpisz nazwę miasta: ");
                     name = console.next();
-                    tree.add(name);
+                    tmpString = tree.add(name);
+                    if(tmpString.equals("TAK")) System.out.println("Pomyślnie dodano miasto do drzewa");
+                    else System.out.println("Podane miasto już istnieje");
+
+
                     //graph.add(name);
-                    //TODO:
-                    //Zamienić wyjątki na zwracane "NIE"
-                    System.out.println("Pomyślnie dodano miasto do drzewa");
                     //System.out.println("Pomyślnie dodano miasto do grafu");
                     break;
                 case 3:
@@ -71,9 +81,11 @@ public class Main {
                     System.out.println("*USUWANIE MIASTA*");
                     System.out.print("Wpisz nazwę miasta: ");
                     name = console.next();
-                    tree.remove(name);
+                    tmpString = tree.remove(name);
+                    if(tmpString.equals("TAK")) System.out.println("Pomyślnie usunięto miasto z drzewa");
+                    else System.out.println("Podane miasto nie istnieje!");
+
                     //graph.remove(name);
-                    System.out.println("Pomyślnie usunięto miasto z drzewa");
                     //System.out.println("Pomyślnie usunięto miasto z grafu");
                     break;
                 case 4:

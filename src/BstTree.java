@@ -1,17 +1,15 @@
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
 import java.util.Stack;
 
-public class BstTree {
+public class BstTree {//class sieć, net,??
     private TreeVertex startVertex;
+
     public BstTree() {
         startVertex = null;
-        //vertices = new TreeVertex[Main.MAX_N+1];
     }
 
     public String add(String name) {
         Stack<TreeVertex>stack = new Stack<>();
-        //TreeVertex lastTreeVertex;
 
         TreeVertex currVertex = this.startVertex;
         if(this.startVertex == null) {
@@ -46,10 +44,8 @@ public class BstTree {
             else {
                 return "NIE";//stos automatycznie się opróżni
             }
-
         }
-        //return "NIE";
-        return "";//??
+        return "";//nie będie nigdy takiej sytuacji, ale kompilator wymaga zwrócenia czegokolwiek
     }
 
     public TreeVertex findCity(String name) {
@@ -65,10 +61,12 @@ public class BstTree {
                 return currVertex;
             }
         }
-        throw new NoSuchElementException("There is no city with given name.");//Check it's name again.
+        return null;
     }
 
-    public void remove(String name) {//TODO: dodać elementy AVL
+    public String remove(String name) {//TODO: dodać elementy AVL
+        Stack<TreeVertex>stack = new Stack<>();
+
         TreeVertex parent = this.startVertex;
         TreeVertex currVertex = this.startVertex;
         String whichChild = "";
@@ -79,11 +77,13 @@ public class BstTree {
              * od aktualnego, to przejdź do jego lewego poddrzewa
              */
             if (name.compareTo(currVertex.getName()) < 0) {
+                stack.add(currVertex);
                 parent = currVertex;
                 whichChild = "left";
                 currVertex = currVertex.getLeftChild();
             }
             else if (name.compareTo(currVertex.getName()) > 0) {
+                stack.add(currVertex);
                 parent = currVertex;
                 whichChild = "right";
                 currVertex = currVertex.getRightChild();
@@ -93,7 +93,7 @@ public class BstTree {
             }
         }
         if(currVertex == null) {
-            throw new NoSuchElementException("There is no city with given name.");
+            return "NIE";
         }
         if(!currVertex.hasChildren()) {
             if(whichChild == "left") parent.setLeftChild(null);
@@ -107,17 +107,22 @@ public class BstTree {
             if(whichChild.equals("left")) parent.setLeftChild(successor);
             else if(whichChild.equals("right")) parent.setRightChild(successor);
             else this.startVertex = successor;
+            stack.add(successor);
         }
         else if(currVertex.hasLeftChild()) {
             if(whichChild.equals("left")) parent.setLeftChild(currVertex.getLeftChild());
             else if(whichChild.equals("right")) parent.setRightChild(currVertex.getLeftChild());
             else this.startVertex = currVertex.getLeftChild();
+            stack.add(currVertex.getLeftChild());
         }
         else if(currVertex.hasRightChild()) {
             if(whichChild.equals("left")) parent.setLeftChild(currVertex.getRightChild());
             else if(whichChild.equals("right")) parent.setRightChild(currVertex.getRightChild());
             else this.startVertex = currVertex.getRightChild();
+            stack.add(currVertex.getRightChild());
         }
+        //balanceTheTree();
+        return "TAK";
     }
 
 
@@ -220,8 +225,6 @@ public class BstTree {
         return startVertex;
     }
 
-
-
     @Override
     public String toString() {
         ArrayList<TreeVertex>q = new ArrayList<>();
@@ -260,7 +263,6 @@ public class BstTree {
                     }
                 }
                 else {//LR case
-                    //System.out.println("here: "+x);
                     x.setLeftChild(leftRotation(x.getLeftChild()));
                     if (stack.empty()) this.startVertex = rightRotation(x);
                     else {
