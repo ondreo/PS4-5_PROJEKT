@@ -1,5 +1,6 @@
 import java.util.LinkedList;
 import java.util.PriorityQueue;
+import java.util.Stack;
 
 public class Graph {
     public Graph() {
@@ -25,12 +26,28 @@ public class Graph {
         City cityA = Main.tree.findCity(cityAName);
         City cityB = Main.tree.findCity(cityBName);
 
+        String out = "";
+        if(cityA == null) out = "Miasto A nie istnieje";
+        if(cityB == null) {
+            if(!out.equals("")) out += '\n';
+            out += "Miasto B nie istnieje";
+        }
+        if(!out.equals("")) return out;
+
         cityA.addRoad(cityB,length);
         return cityB.addRoad(cityA,length);
     }
     public String removeRoad(String cityAName, String cityBName) {
         City cityA = Main.tree.findCity(cityAName);
         City cityB = Main.tree.findCity(cityBName);
+
+        String out = "";
+        if(cityA == null) out = "Miasto A nie istnieje";
+        if(cityB == null) {
+            if(!out.equals("")) out += '\n';
+            out += "Miasto B nie istnieje";
+        }
+        if(!out.equals("")) return out;
 
         cityA.removeRoad(cityB);
         return cityB.removeRoad(cityA);
@@ -48,15 +65,8 @@ public class Graph {
         }
         if(!out.equals("")) return out;
 
-        //int[] dist = new int[]
-
         PriorityQueue<City>pq = new PriorityQueue<>();//TODO: dodać compareTo oraz equals
-        sourceCity.setDistFromSource(0);
-        //sourceCity.setPredecessor(null);
-        //sourceCity.setVisited(false);
-        //TODO: ustawienie pozostałych wierzchołków na odpowiednie wartości i to możliwe, że wcześniej w kodzie o 2 linijki
-        //podobnie z visited
-
+        initializeDijkstraParams(sourceCity);
         pq.add(sourceCity);
 
         while(pq.peek() != destCity) {
@@ -67,16 +77,34 @@ public class Graph {
             for(Road road : adjacentCities) {
                 if(currCity.getDistFromSource() + road.getLength() < road.getDestCity().getDistFromSource()) {
                     road.getDestCity().setDistFromSource(currCity.getDistFromSource() + road.getLength());
-                    //road.getDestCity().setPredecessor(currCity);
+                    road.getDestCity().setPredecessor(currCity);
 
-                    pq.remove(road.getDestCity());
+                    pq.remove(road.getDestCity());//aktualizujemy odległości na kolejce
                     pq.add(road.getDestCity());
                 }
             }
             currCity.setAdjacentCities(adjacentCities);
         }
-        return String.valueOf(destCity.getDistFromSource());
+        if(destCity.getDistFromSource() == Integer.MAX_VALUE)
+            return "Nie istnieje ścieżka pomiędzy podanymi miastami!";
+        return "Długość najkrótszej ścieżki pomiędzy miastami = " + String.valueOf(destCity.getDistFromSource());
 
         //return out;//samą długość czy postać drogi też??
+    }
+
+    private void initializeDijkstraParams(City sourceCity) {
+        City x = Main.tree.getStartVertex();
+        Stack<City> stack = new Stack<>();
+        stack.add(x);
+        while(!stack.isEmpty()) {
+            x = stack.peek();
+            stack.pop();
+            if(x != sourceCity) x.setDistFromSource(0);
+            else x.setDistFromSource(Integer.MAX_VALUE);
+            x.setPredecessor(null);
+            x.setVisited(false);
+            if(x.hasLeftChild()) stack.add(x.getLeftChild());
+            if(x.hasRightChild()) stack.add(x.getRightChild());
+        }
     }
 }

@@ -3,6 +3,7 @@ import java.util.Scanner;
 public class Main {
     //final static int MAX_N = 100;
     static AvlTree tree;
+    static Graph graph;
     public static void main(String[] args) throws NameException {
         Scanner console = new Scanner(System.in);
         //drzewo (póki co BST, potem dodać funkcjonalności AVL):
@@ -50,6 +51,7 @@ public class Main {
 
             String tmpString = "";
             City tmpCity = null;
+            String a,b;
 
             String name;
             //int choice = 0;
@@ -73,12 +75,8 @@ public class Main {
                     System.out.print("Wpisz nazwę miasta: ");
                     name = console.next();
                     tmpString = tree.addVertex(name);
-                    if(tmpString.equals("TAK")) System.out.println("Pomyślnie dodano miasto do drzewa");
+                    if(tmpString.equals("TAK")) System.out.println("Pomyślnie dodano miasto");
                     else System.out.println("Podane miasto już istnieje");
-
-
-                    //graph.add(name);
-                    //System.out.println("Pomyślnie dodano miasto do grafu");
                     break;
                 case 3:
                     //usunięcie istniejącego miasta
@@ -86,11 +84,8 @@ public class Main {
                     System.out.print("Wpisz nazwę miasta: ");
                     name = console.next();
                     tmpString = tree.removeVertex(name);
-                    if(tmpString.equals("TAK")) System.out.println("Pomyślnie usunięto miasto z drzewa");
+                    if(tmpString.equals("TAK")) System.out.println("Pomyślnie usunięto miasto");
                     else System.out.println("Podane miasto nie istnieje!");
-
-                    //graph.remove(name);
-                    //System.out.println("Pomyślnie usunięto miasto z grafu");
                     break;
                 case 4:
                     //wyszukanie liczby miast o danym prefiksie nazwy
@@ -107,10 +102,58 @@ public class Main {
                     }
                     System.out.println(" takich miast");
                     break;
+                case 5:
+                    //dodanie drogi pomiędzy miastami
+                    System.out.println("*DODAWANIE DROGI POMIĘDZY MIASTAMI*");
+                    System.out.println("Podaj nazwy miast, pomiędzy którymi ma powstać droga.");
+                    System.out.print("Miasto A: ");
+                    a = console.next();
+                    System.out.print("Miasto B: ");
+                    b = console.next();
+                    System.out.print("Podaj długość drogi łączącej miasta:");
+                    int length = console.nextInt();
+
+                    tmpString = graph.addRoad(a,b,length);
+                    if(tmpString.equals("TAK")) System.out.println("Pomyślnie dodano dwukierunkową drogę między miastami");
+                    else if(tmpString.equals("NIE")) System.out.println("Podana droga między miastami już istnieje!");
+                    else System.out.println(tmpString);
+                    break;
+                case 6:
+                    //usunięcie drogi pomiędzy miastami
+                    System.out.println("*USUWANIE DROGI POMIĘDZY MIASTAMI*");
+                    System.out.println("Podaj nazwy miast, pomiędzy którymi drogę chcesz usunąć.");
+                    System.out.print("Miasto A: ");
+                    a = console.next();
+                    System.out.print("Miasto B: ");
+                    b = console.next();
+
+                    tmpString = graph.removeRoad(a,b);
+                    if(tmpString.equals("TAK")) System.out.println("Pomyślnie usunięto dwukierunkową drogę między miastami");
+                    else if(tmpString.equals("NIE")) System.out.println("Podana droga między miastami nie istnieje!");
+                    else System.out.println(tmpString);
+                    break;
+                case 7:
+                    //znajdowanie najkrótszej ścieżki pomiędzy dwoma miastami
+                    System.out.println("*ZNAJDOWANIE NAJKRÓTSZEJ ŚCIEŻKI POMIĘDZY DWOMA MIASTAMI*");
+                    System.out.println("Podaj nazwy miast, pomiędzy którymi chcesz znaleźć najkrótszą drogę.");
+                    System.out.print("Miasto A: ");
+                    a = console.next();
+                    System.out.print("Miasto B: ");
+                    b = console.next();
+
+                    System.out.println(graph.findShortestPathBetweenTwoCities(a,b));
+                    break;
+                case 8:
+                    //do ilu miast skróci się długość przejazdu z miasta A, jeżeli wybudowana
+                    //zostałaby droga pomiędzy miastami B i C (o zadanej długości)
+                    System.out.println("");
+                    break;
+
                 default:
                     break;
             }
             System.out.println("\n\n\n");
+            //int tmpWyraz = Integer.parseInt("wyraz");
         }
     }
 }

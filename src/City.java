@@ -12,7 +12,7 @@ public class City {
 
     //priorityQueue:
     private int distFromSource;
-    //private City predecessor;
+    private City predecessor;
     private Boolean visited;
 
 
@@ -21,9 +21,6 @@ public class City {
         leftChild = rightChild = null;
         this.height = 1;
         adjacentCities = new LinkedList<>();
-        //distFromSource = Integer.MAX_VALUE;//TODO: za każdym przejściem Dijkstry aktualizować
-        //predecessor = null//TODO: za każdym przejściem Dijkstry aktualizować
-        //visited = false//podobnie jak wyżej
     }
 
     /*public City(City x) {//konstruktor kopiujący
@@ -34,6 +31,7 @@ public class City {
     }*/
 
     public String addRoad(City destCity, int length) {
+
         if(!adjacentCities.contains(new Road(destCity, length))) {
             adjacentCities.add(new Road(destCity,length));
             return "TAK";
@@ -108,17 +106,16 @@ public class City {
         this.distFromSource = distFromSource;
     }
 
-    /*public City getPredecessor() {
+    public City getPredecessor() {
         return predecessor;
     }
     public void setPredecessor(City predecessor) {
         this.predecessor = predecessor;
-    }*/
+    }
 
     public Boolean getVisited() {
         return visited;
     }
-
     public void setVisited(Boolean visited) {
         this.visited = visited;
     }
