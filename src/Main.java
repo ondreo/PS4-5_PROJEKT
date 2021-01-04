@@ -1,45 +1,31 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Main {
     //final static int MAX_N = 100;
     static AvlTree tree;
     static Graph graph;
-    public static void main(String[] args) throws NameException {
+    public static void main(String[] args) throws FileNotFoundException {
         Scanner console = new Scanner(System.in);
-        //drzewo (póki co BST, potem dodać funkcjonalności AVL):
+        Scanner fromFile = new Scanner(new File("testy/projekt1_in1.txt"));
+        int nrOfAllLines = fromFile.nextInt();
+        int nrOfReadLines = 0;
         tree = new AvlTree();
         graph = new Graph();
-        tree.addVertex("Białystok");
-        //System.out.println(tree.toString());
-        //System.out.println();
-
+        /*tree.addVertex("Białystok");
         tree.addVertex("Kraków");
-        //System.out.println(tree.toString());
-        //System.out.println();
-
         tree.addVertex("Krak");
-        //System.out.println(tree.toString());
-        //System.out.println();
-
         tree.addVertex("Kraz");
-        //System.out.println(tree.toString());
-        //System.out.println();
-
         tree.addVertex("Bełchatow");
-        //System.out.println(tree.toString());
-        //System.out.println();
-
         tree.addVertex("Baltoszewo");
-        //System.out.println(tree.toString());
-        //System.out.println();
-
         tree.addVertex("Mońki");
         System.out.println(tree.toString());
-        System.out.println();
-
+        System.out.println();*/
         while(true) {
             System.out.println("Co chcesz zrobić?");
-            System.out.println("1. Wyszukaj miasto po nazwie");//"ERROR"
+            System.out.println("0. Wczytaj kolejną linijkę z pliku.");
+            System.out.println("1. Wyszukaj miasto po nazwie");
             System.out.println("2. Dodaj miasto");
             System.out.println("3. Usuń miasto");
             System.out.println("4. Wyszukaj miasta po prefixie");
@@ -59,6 +45,10 @@ public class Main {
             //int choice = 0;
             int choice = console.nextInt();
             switch (choice) {
+                case 0:
+                    //wczytywanie kolejnej linijki z pliku
+                    System.out.println(readLineFromFile(fromFile, nrOfAllLines, nrOfReadLines));
+                    break;
                 case 1:
                     //wyszukiwanie miasta (po nazwie - unikalna)
                     System.out.println("*WYSZUKIWANIE MIASTA*");
@@ -90,8 +80,8 @@ public class Main {
                     else System.out.println("Podane miasto nie istnieje!");
                     break;
                 case 4:
-                    //wyszukanie liczby miast o danym prefiksie nazwy
-                    System.out.println("*WYSZUKIWANIE MIASTA PO PREFIKSIE*");
+                    //wypisanie liczby miast o danym prefiksie nazwy
+                    System.out.println("*WYPISANIE LICZBY MIAST PO PREFIKSIE*");
                     System.out.print("Wpisz prefiks wyszukiwanych miast: ");
                     name = console.next();
                     int tmp = tree.countCitiesByPrefix(name,tree.getStartVertex());
@@ -146,7 +136,7 @@ public class Main {
                     System.out.println(graph.findShortestPathBetweenTwoCities(a,b));
                     break;
                 case 8:
-                    //do ilu miast skróci się długość przejazdu z miasta A (z miasta A do ilu pozostałych miast się skróci - to bardziej zrozumiałe), jeżeli wybudowana
+                    //do ilu miast skróci się długość przejazdu z miasta A, jeżeli wybudowana
                     //zostałaby droga pomiędzy miastami B i C (o zadanej długości)
                     System.out.println("*OBLICZENIE DO ILU MIAST SKRÓCI SIĘ DŁUGOŚĆ PRZEJAZDU Z MIASTA A, JEŻELI WYBUDOWANA");
                     System.out.println("ZOSTAŁABY DROGA POMIĘDZY MIASTAMI B I C O ZADANEJ DŁUGOŚCI*");
@@ -172,6 +162,86 @@ public class Main {
             }
             System.out.println("\n\n\n");
             //int tmpWyraz = Integer.parseInt("wyraz");
+        }
+    }
+    static String readLineFromFile(Scanner fromFile, int nrOfAllLines, int nrOfReadLines) {
+
+        String tmpString = "";
+        City tmpCity = null;
+        String a,b,c;
+        int length;
+
+        if(nrOfReadLines == nrOfAllLines) return "Wczytano już cały plik.";
+        String choice = fromFile.next();
+        String name;
+        switch (choice) {
+            case "DM":
+                //dodanie nowego miasta
+                name = fromFile.next();
+                tmpString = tree.addVertex(name);
+                if(tmpString.equals("TAK")) return choice+" "+name+": "+"Pomyślnie dodano miasto";
+                else return choice+" "+name+": "+"Podane miasto już istnieje";
+            case "UM":
+                //usunięcie istniejącego miasta
+                name = fromFile.next();
+                tmpString = tree.removeVertex(name);
+                if(tmpString.equals("TAK")) return choice+" "+name+": "+"Pomyślnie usunięto miasto";
+                else return choice+" "+name+": "+"Podane miasto nie istnieje!";
+            case "WM":
+                //wyszukiwanie miasta (po nazwie - unikalna)
+                name = fromFile.next();
+                tmpCity = tree.findCity(name);
+                if(tmpCity != null) return choice+" "+name+": "+"TAK";
+                else return choice+" "+name+": "+"NIE";
+            case "LM":
+                //wypisanie liczby miast o danym prefiksie nazwy
+                name = fromFile.next();
+                int tmp = tree.countCitiesByPrefix(name,tree.getStartVertex());
+                if(tmp <= 100) return choice+" "+name+": "+"W danym drzewie jest: "+tmp+" takich miast";
+                else return choice+" "+name+": "+"W danym drzewie jest: 100+ takich miast";
+            case "WY":
+                //wypisanie struktury drzewa
+                System.out.println(tree);
+            case "DD":
+                //dodanie drogi pomiędzy miastami
+                a = fromFile.next();
+                b = fromFile.next();
+                length = fromFile.nextInt();
+
+                tmpString = graph.addRoad(a,b,length);
+                if(tmpString.equals("TAK")) return choice+" "+a+" "+b+" "+length+": "+"Pomyślnie dodano dwukierunkową drogę między miastami";
+                else if(tmpString.equals("NIE")) return choice+" "+a+" "+b+" "+length+": "+"Podana droga między miastami już istnieje!";
+                else return choice+" "+a+" "+b+" "+length+": "+tmpString;
+            case "UD":
+                //usunięcie drogi pomiędzy miastami
+                a = fromFile.next();
+                b = fromFile.next();
+                tmpString = graph.removeRoad(a,b);
+                if(tmpString.equals("TAK")) return choice+" "+a+" "+b+": "+"Pomyślnie usunięto dwukierunkową drogę między miastami";
+                else if(tmpString.equals("NIE")) return choice+" "+a+" "+b+": "+"Podana droga między miastami nie istnieje!";
+                else return choice+" "+a+" "+b+": "+tmpString;
+            case "ND":
+                //znajdowanie najkrótszej ścieżki pomiędzy dwoma miastami
+                a = fromFile.next();
+                b = fromFile.next();
+                return graph.findShortestPathBetweenTwoCities(a,b);
+            case "IS":
+                //do ilu miast skróci się długość przejazdu z miasta A, jeżeli wybudowana
+                //zostałaby droga pomiędzy miastami B i C (o zadanej długości)
+                a = fromFile.next();
+                b = fromFile.next();
+                c = fromFile.next();
+                length = fromFile.nextInt();
+
+                tmpString = graph.whatIfRoadAdded(a,b,c,length);
+                try {
+                    return choice+" "+a+" "+b+" "+c+" "+length+": "+"Dodanie tej drogi skróci drogi od A do " + Integer.parseInt(tmpString) + " miast.";
+                }
+                catch (NumberFormatException e) {
+                    return choice+" "+a+" "+b+" "+c+" "+length+": "+tmpString;
+                }
+            default:
+                return "Podano niewłaściwą komendę.";
         }
     }
 }
