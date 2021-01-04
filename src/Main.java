@@ -8,6 +8,7 @@ public class Main {
         Scanner console = new Scanner(System.in);
         //drzewo (póki co BST, potem dodać funkcjonalności AVL):
         tree = new AvlTree();
+        graph = new Graph();
         tree.addVertex("Białystok");
         //System.out.println(tree.toString());
         //System.out.println();
@@ -45,13 +46,14 @@ public class Main {
             System.out.println("5. Dodaj drogę pomiędzy miastami ");
             System.out.println("6. Usuń drogę pomiędzy miastami ");
             System.out.println("7. Znajdź najkrótszą drogę pomiędzy miastami ");
-            System.out.println("8. Oblicz, do ilu miast się skróci długość przejazdu z miasta A jeśli wybudujemy drogę pomiędzy miastami B i C ????????????");
+            System.out.println("8. Oblicz, do ilu miast się skróci długość przejazdu z miasta A jeśli wybudujemy drogę pomiędzy miastami B i C");
             System.out.print("Twój wybór: ");
 
 
             String tmpString = "";
             City tmpCity = null;
-            String a,b;
+            String a,b,c;
+            int length;
 
             String name;
             //int choice = 0;
@@ -111,7 +113,7 @@ public class Main {
                     System.out.print("Miasto B: ");
                     b = console.next();
                     System.out.print("Podaj długość drogi łączącej miasta:");
-                    int length = console.nextInt();
+                    length = console.nextInt();
 
                     tmpString = graph.addRoad(a,b,length);
                     if(tmpString.equals("TAK")) System.out.println("Pomyślnie dodano dwukierunkową drogę między miastami");
@@ -144,11 +146,27 @@ public class Main {
                     System.out.println(graph.findShortestPathBetweenTwoCities(a,b));
                     break;
                 case 8:
-                    //do ilu miast skróci się długość przejazdu z miasta A, jeżeli wybudowana
+                    //do ilu miast skróci się długość przejazdu z miasta A (z miasta A do ilu pozostałych miast się skróci - to bardziej zrozumiałe), jeżeli wybudowana
                     //zostałaby droga pomiędzy miastami B i C (o zadanej długości)
-                    System.out.println("");
-                    break;
+                    System.out.println("*OBLICZENIE DO ILU MIAST SKRÓCI SIĘ DŁUGOŚĆ PRZEJAZDU Z MIASTA A, JEŻELI WYBUDOWANA");
+                    System.out.println("ZOSTAŁABY DROGA POMIĘDZY MIASTAMI B I C O ZADANEJ DŁUGOŚCI*");
+                    System.out.print("Miasto A: ");
+                    a = console.next();
+                    System.out.print("Miasto B: ");
+                    b = console.next();
+                    System.out.print("Miasto C: ");
+                    c = console.next();
+                    System.out.print("Podaj długość drogi łączącej miasta:");
+                    length = console.nextInt();
 
+                    tmpString = graph.whatIfRoadAdded(a,b,c,length);
+                    try {
+                        System.out.println("Dodanie tej drogi skróci drogi od A do " + Integer.parseInt(tmpString) + " miast.");
+                    }
+                    catch (NumberFormatException e) {
+                        System.out.println(tmpString);
+                    }
+                    break;
                 default:
                     break;
             }

@@ -1,11 +1,13 @@
 import java.util.ArrayList;
 import java.util.Stack;
 
-public class AvlTree {//class sieć, net,??
+public class AvlTree {
     private City startCity;
+    private int n;
 
     public AvlTree() {
         startCity = null;
+        n = 0;
     }
 
     public String addVertex(String name) {
@@ -14,6 +16,7 @@ public class AvlTree {//class sieć, net,??
         City currCity = this.startCity;
         if(this.startCity == null) {
             startCity = new City(name);
+            ++n;
             return "TAK";
         }
         while(currCity != null) {
@@ -25,6 +28,7 @@ public class AvlTree {//class sieć, net,??
                 if(currCity.getLeftChild() == null) {
                     currCity.setLeftChild(new City(name));
                     balanceTheTree(currCity.getLeftChild(), stack);
+                    ++n;
                     return "TAK";
                 }
                 else {
@@ -35,6 +39,7 @@ public class AvlTree {//class sieć, net,??
                 if(currCity.getRightChild() == null) {
                     currCity.setRightChild(new City(name));
                     balanceTheTree(currCity.getRightChild(), stack);
+                    ++n;
                     return "TAK";
                 }
                 else {
@@ -140,12 +145,10 @@ public class AvlTree {//class sieć, net,??
             stack.add(currCity);
         }
 
-
         //raczej currCity jest dobrze, ale sprawdzić jeśli będzie błąd
         balanceTheTree(currCity,stack);
 
-
-
+        --n;
         return "TAK";
     }
 
@@ -235,6 +238,13 @@ public class AvlTree {//class sieć, net,??
 
     public City getStartVertex() {
         return startCity;
+    }
+
+    public int getN() {
+        return n;
+    }
+    public void setN(int n) {
+        this.n = n;
     }
 
     @Override

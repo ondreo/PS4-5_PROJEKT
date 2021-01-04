@@ -1,6 +1,6 @@
 import java.util.LinkedList;
 
-public class City {
+public class City implements Comparable<City> {
     //tree:
     private String name;
     private City leftChild;
@@ -12,6 +12,7 @@ public class City {
 
     //priorityQueue:
     private int distFromSource;
+    private int prevDistFromSource;
     private City predecessor;
     private Boolean visited;
 
@@ -106,6 +107,13 @@ public class City {
         this.distFromSource = distFromSource;
     }
 
+    public int getPrevDistFromSource() {
+        return prevDistFromSource;
+    }
+    public void setPrevDistFromSource(int prevDistFromSource) {
+        this.prevDistFromSource = prevDistFromSource;
+    }
+
     public City getPredecessor() {
         return predecessor;
     }
@@ -118,6 +126,22 @@ public class City {
     }
     public void setVisited(Boolean visited) {
         this.visited = visited;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        City city = (City) o;
+        return name.equals(city.name);
+    }
+
+    @Override
+    public int compareTo(City o) {
+        return Integer.compare(this.getDistFromSource(), o.getDistFromSource());
+        //if(this.getDistFromSource() > o.getDistFromSource()) return 1;
+        //else if(o.getDistFromSource() == this.getDistFromSource()) return 0;
+        //else return -1;
     }
 
     @Override
