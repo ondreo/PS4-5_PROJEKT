@@ -6,11 +6,13 @@ public class Main {
     //final static int MAX_N = 100;
     static AvlTree tree;
     static Graph graph;
+    static int nrOfAllLines;
+    static int nrOfReadLines;
     public static void main(String[] args) throws FileNotFoundException {
         Scanner console = new Scanner(System.in);
         Scanner fromFile = new Scanner(new File("testy/projekt1_in1.txt"));
-        int nrOfAllLines = fromFile.nextInt();
-        int nrOfReadLines = 0;
+        nrOfAllLines = fromFile.nextInt();
+        nrOfReadLines = 0;
         tree = new AvlTree();
         graph = new Graph();
         /*tree.addVertex("Białystok");
@@ -29,10 +31,11 @@ public class Main {
             System.out.println("2. Dodaj miasto");
             System.out.println("3. Usuń miasto");
             System.out.println("4. Wyszukaj miasta po prefixie");
-            System.out.println("5. Dodaj drogę pomiędzy miastami ");
-            System.out.println("6. Usuń drogę pomiędzy miastami ");
-            System.out.println("7. Znajdź najkrótszą drogę pomiędzy miastami ");
-            System.out.println("8. Oblicz, do ilu miast się skróci długość przejazdu z miasta A jeśli wybudujemy drogę pomiędzy miastami B i C");
+            System.out.println("5. Wypisz strukturę drzewa AVL");
+            System.out.println("6. Dodaj drogę pomiędzy miastami ");
+            System.out.println("7. Usuń drogę pomiędzy miastami ");
+            System.out.println("8. Znajdź najkrótszą drogę pomiędzy miastami ");
+            System.out.println("9. Oblicz, do ilu miast się skróci długość przejazdu z miasta A jeśli wybudujemy drogę pomiędzy miastami B i C");
             System.out.print("Twój wybór: ");
 
 
@@ -47,7 +50,7 @@ public class Main {
             switch (choice) {
                 case 0:
                     //wczytywanie kolejnej linijki z pliku
-                    System.out.println(readLineFromFile(fromFile, nrOfAllLines, nrOfReadLines));
+                    System.out.println(readLineFromFile(fromFile));
                     break;
                 case 1:
                     //wyszukiwanie miasta (po nazwie - unikalna)
@@ -95,6 +98,10 @@ public class Main {
                     System.out.println(" takich miast");
                     break;
                 case 5:
+                    //wypisanie struktury drzewa
+                    System.out.println(tree);
+                    break;
+                case 6:
                     //dodanie drogi pomiędzy miastami
                     System.out.println("*DODAWANIE DROGI POMIĘDZY MIASTAMI*");
                     System.out.println("Podaj nazwy miast, pomiędzy którymi ma powstać droga.");
@@ -110,7 +117,7 @@ public class Main {
                     else if(tmpString.equals("NIE")) System.out.println("Podana droga między miastami już istnieje!");
                     else System.out.println(tmpString);
                     break;
-                case 6:
+                case 7:
                     //usunięcie drogi pomiędzy miastami
                     System.out.println("*USUWANIE DROGI POMIĘDZY MIASTAMI*");
                     System.out.println("Podaj nazwy miast, pomiędzy którymi drogę chcesz usunąć.");
@@ -124,7 +131,7 @@ public class Main {
                     else if(tmpString.equals("NIE")) System.out.println("Podana droga między miastami nie istnieje!");
                     else System.out.println(tmpString);
                     break;
-                case 7:
+                case 8:
                     //znajdowanie najkrótszej ścieżki pomiędzy dwoma miastami
                     System.out.println("*ZNAJDOWANIE NAJKRÓTSZEJ ŚCIEŻKI POMIĘDZY DWOMA MIASTAMI*");
                     System.out.println("Podaj nazwy miast, pomiędzy którymi chcesz znaleźć najkrótszą drogę.");
@@ -135,7 +142,7 @@ public class Main {
 
                     System.out.println(graph.findShortestPathBetweenTwoCities(a,b));
                     break;
-                case 8:
+                case 9:
                     //do ilu miast skróci się długość przejazdu z miasta A, jeżeli wybudowana
                     //zostałaby droga pomiędzy miastami B i C (o zadanej długości)
                     System.out.println("*OBLICZENIE DO ILU MIAST SKRÓCI SIĘ DŁUGOŚĆ PRZEJAZDU Z MIASTA A, JEŻELI WYBUDOWANA");
@@ -164,15 +171,17 @@ public class Main {
             //int tmpWyraz = Integer.parseInt("wyraz");
         }
     }
-    static String readLineFromFile(Scanner fromFile, int nrOfAllLines, int nrOfReadLines) {
+    static String readLineFromFile(Scanner fromFile) {
 
         String tmpString = "";
         City tmpCity = null;
         String a,b,c;
         int length;
 
+        //System.out.println("nrOfReadLines = "+nrOfReadLines);
         if(nrOfReadLines == nrOfAllLines) return "Wczytano już cały plik.";
         String choice = fromFile.next();
+        ++nrOfReadLines;
         String name;
         switch (choice) {
             case "DM":

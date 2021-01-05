@@ -109,8 +109,9 @@ public class AvlTree {
         }
         else if(currCity.hasLeftChild() && currCity.hasRightChild()){
             City successor = findSuccessor(currCity);
-            currCity.setName(successor.getName());
+            String tmp = successor.getName();
             this.removeVertex(successor.getName());
+            currCity.setName(tmp);
 
             stack.add(currCity);
         }
@@ -248,7 +249,8 @@ public class AvlTree {
     }
 
     @Override
-    public String toString() {
+    public String toString() {//TODO: rzeczywisty wygląd drzewa (spacje/tabulacje według wysokości)
+        if(this.startCity == null) return "Drzewo nie zawiera żadnych wierzchołków.";
         ArrayList<City>q = new ArrayList<>();
         String out = "";
         City currCity = this.startCity;
