@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class Main {
@@ -8,9 +9,12 @@ public class Main {
     static Graph graph;
     static int nrOfAllLines;
     static int nrOfReadLines;
+    static Scanner fromFile;
+    static PrintWriter toFile;
     public static void main(String[] args) throws FileNotFoundException {
         Scanner console = new Scanner(System.in);
-        Scanner fromFile = new Scanner(new File("testy/projekt1_in1.txt"));
+        fromFile = new Scanner(new File("testy/projekt1_in3.txt"));
+        toFile = new PrintWriter(new File("testy/projekt1_out3_moj.txt"));
         nrOfAllLines = fromFile.nextInt();
         nrOfReadLines = 0;
         tree = new AvlTree();
@@ -25,8 +29,10 @@ public class Main {
         System.out.println(tree.toString());
         System.out.println();*/
         while(true) {
+            //System.out.println("\tjedna tabulacja");
+            //System.out.println("\t\tdwie tabulacje");
+            //System.out.println("\t\t\ttrzy tabulacje");
             System.out.println("Co chcesz zrobić?");
-            System.out.println("0. Wczytaj kolejną linijkę z pliku.");
             System.out.println("1. Wyszukaj miasto po nazwie");
             System.out.println("2. Dodaj miasto");
             System.out.println("3. Usuń miasto");
@@ -36,6 +42,9 @@ public class Main {
             System.out.println("7. Usuń drogę pomiędzy miastami ");
             System.out.println("8. Znajdź najkrótszą drogę pomiędzy miastami ");
             System.out.println("9. Oblicz, do ilu miast się skróci długość przejazdu z miasta A jeśli wybudujemy drogę pomiędzy miastami B i C");
+            System.out.println("10. Wczytaj kolejną linijkę z pliku.");
+            System.out.println("11. Wczytaj cały plik.");
+            System.out.println("12. Zakończ działanie programu.");
             System.out.print("Twój wybór: ");
 
 
@@ -48,10 +57,6 @@ public class Main {
             //int choice = 0;
             int choice = console.nextInt();
             switch (choice) {
-                case 0:
-                    //wczytywanie kolejnej linijki z pliku
-                    System.out.println(readLineFromFile(fromFile));
-                    break;
                 case 1:
                     //wyszukiwanie miasta (po nazwie - unikalna)
                     System.out.println("*WYSZUKIWANIE MIASTA*");
@@ -78,7 +83,7 @@ public class Main {
                     System.out.println("*USUWANIE MIASTA*");
                     System.out.print("Wpisz nazwę miasta: ");
                     name = console.next();
-                    tmpString = tree.removeVertex(name);
+                    tmpString = tree.removeVertex(name,"");
                     if(tmpString.equals("TAK")) System.out.println("Pomyślnie usunięto miasto");
                     else System.out.println("Podane miasto nie istnieje!");
                     break;
@@ -164,14 +169,28 @@ public class Main {
                         System.out.println(tmpString);
                     }
                     break;
+                case 10:
+                    //wczytywanie kolejnej linijki z pliku
+                    System.out.println(readLineFromFile());
+                    break;
+                case 11:
+                    //wczytywanie wszystkich linii pliku
+                    for(int i=0;i<nrOfAllLines;++i) {
+                        readLineFromFile();
+                    }
+                    break;
+                case 12:
+                    fromFile.close();
+                    toFile.close();
+                    return;
                 default:
+                    System.out.println("Wybrałeś niewłaściwą opcję! Spróbuj ponownie!");
                     break;
             }
             System.out.println("\n\n\n");
-            //int tmpWyraz = Integer.parseInt("wyraz");
         }
     }
-    static String readLineFromFile(Scanner fromFile) {
+    static String readLineFromFile(/*Scanner fromFile,PrintWriter toFile*/) {
 
         String tmpString = "";
         City tmpCity = null;
@@ -193,24 +212,46 @@ public class Main {
             case "UM":
                 //usunięcie istniejącego miasta
                 name = fromFile.next();
-                tmpString = tree.removeVertex(name);
+                tmpString = tree.removeVertex(name, "");
+                /*try {
+                    tmpString = tree.removeVertex(name);
+                }
+                catch (NullPointerException e) {
+                    System.out.println("name="+name);
+                    System.out.println(e);
+                    System.out.println("name="+name);
+                }*/
                 if(tmpString.equals("TAK")) return choice+" "+name+": "+"Pomyślnie usunięto miasto";
                 else return choice+" "+name+": "+"Podane miasto nie istnieje!";
             case "WM":
                 //wyszukiwanie miasta (po nazwie - unikalna)
                 name = fromFile.next();
                 tmpCity = tree.findCity(name);
-                if(tmpCity != null) return choice+" "+name+": "+"TAK";
-                else return choice+" "+name+": "+"NIE";
+                if(tmpCity != null) {
+                    toFile.println("TAK");
+                    return choice+" "+name+": "+"TAK";
+                }
+                else {
+                    toFile.println("NIE");
+                    return choice+" "+name+": "+"NIE";
+                }
             case "LM":
                 //wypisanie liczby miast o danym prefiksie nazwy
                 name = fromFile.next();
                 int tmp = tree.countCitiesByPrefix(name,tree.getStartVertex());
-                if(tmp <= 100) return choice+" "+name+": "+"W danym drzewie jest: "+tmp+" takich miast";
-                else return choice+" "+name+": "+"W danym drzewie jest: 100+ takich miast";
+                if(tmp <= 100) {
+                    toFile.println(tmp);
+                    return choice+" "+name+": "+"W danym drzewie jest: "+tmp+" takich miast";
+                }
+                else {
+                    toFile.println("100+");
+                    return choice+" "+name+": "+"W danym drzewie jest: 100+ takich miast";
+                }
             case "WY":
                 //wypisanie struktury drzewa
-                System.out.println(tree);
+                String out = tree.toString();
+                toFile.println(out);
+                return out;
             case "DD":
                 //dodanie drogi pomiędzy miastami
                 a = fromFile.next();
@@ -233,7 +274,9 @@ public class Main {
                 //znajdowanie najkrótszej ścieżki pomiędzy dwoma miastami
                 a = fromFile.next();
                 b = fromFile.next();
-                return graph.findShortestPathBetweenTwoCities(a,b);
+                out = graph.findShortestPathBetweenTwoCities(a,b);
+                toFile.println(out);
+                return out;
             case "IS":
                 //do ilu miast skróci się długość przejazdu z miasta A, jeżeli wybudowana
                 //zostałaby droga pomiędzy miastami B i C (o zadanej długości)
@@ -243,6 +286,7 @@ public class Main {
                 length = fromFile.nextInt();
 
                 tmpString = graph.whatIfRoadAdded(a,b,c,length);
+                toFile.println(tmpString);
                 try {
                     return choice+" "+a+" "+b+" "+c+" "+length+": "+"Dodanie tej drogi skróci drogi od A do " + Integer.parseInt(tmpString) + " miast.";
                 }

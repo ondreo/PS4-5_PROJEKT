@@ -69,7 +69,7 @@ public class AvlTree {
         return null;
     }
 
-    public String removeVertex(String name) {
+    public String removeVertex(String name,String predecessorName) {
         Stack<City>stack = new Stack<>();
 
         City parent = this.startCity;
@@ -100,6 +100,7 @@ public class AvlTree {
         if(currCity == null) {
             return "NIE";
         }
+        //System.out.println("currCity.getName() = " + currCity.getName());
         if(!currCity.hasChildren()) {
             if(whichChild == "left") parent.setLeftChild(null);
             else if(whichChild == "right") parent.setRightChild(null);
@@ -110,7 +111,10 @@ public class AvlTree {
         else if(currCity.hasLeftChild() && currCity.hasRightChild()){
             City successor = findSuccessor(currCity);
             String tmp = successor.getName();
-            this.removeVertex(successor.getName());
+            if(currCity.getName().equals("f")) {
+                //System.out.println("currCity.getName() = " + currCity.getName() + ", successor.getName() = " +successor.getName());
+            }//TODO: to be deleted
+            this.removeVertex(successor.getName(),currCity.getName());
             currCity.setName(tmp);
 
             stack.add(currCity);
@@ -119,8 +123,8 @@ public class AvlTree {
             //stack.add(currCity);
             //v1:
             currCity.setName(currCity.getLeftChild().getName());
+            currCity.setRightChild(currCity.getLeftChild().getRightChild());
             currCity.setLeftChild(currCity.getLeftChild().getLeftChild());
-            currCity.setLeftChild(currCity.getLeftChild().getRightChild());
 
             /*
             //v2:
@@ -135,7 +139,7 @@ public class AvlTree {
             //v1:
             currCity.setName(currCity.getRightChild().getName());
             currCity.setLeftChild(currCity.getRightChild().getLeftChild());
-            currCity.setLeftChild(currCity.getRightChild().getRightChild());
+            currCity.setRightChild(currCity.getRightChild().getRightChild());
 
             /*
             //v2
@@ -147,7 +151,9 @@ public class AvlTree {
         }
 
         //raczej currCity jest dobrze, ale sprawdzić jeśli będzie błąd
-        balanceTheTree(currCity,stack);
+        //System.out.println("currCity = " + currCity);
+        if(!currCity.getName().equals(predecessorName)) balanceTheTree(currCity,stack);//czy na pewno???????????????????????????????
+        //else System.out.println("currCity = " + currCity);
 
         --n;
         return "TAK";
@@ -209,6 +215,7 @@ public class AvlTree {
     }
 
     private City leftRotation(City x) {
+        //System.out.println("x = " + x);
         City y = x.getRightChild();
         City T2 = y.getLeftChild();
 
@@ -217,9 +224,6 @@ public class AvlTree {
 
         x.setHeight(Math.max(getVertexHeight(x.getLeftChild()),getVertexHeight(x.getRightChild()))+1);
         y.setHeight(Math.max(getVertexHeight(y.getLeftChild()),getVertexHeight(y.getRightChild()))+1);
-        if(getVertexHeight(y) == 8) {
-            System.out.println("wtf");
-        }
 
         return y;
     }
@@ -253,15 +257,65 @@ public class AvlTree {
         if(this.startCity == null) return "Drzewo nie zawiera żadnych wierzchołków.";
         ArrayList<City>q = new ArrayList<>();
         String out = "";
+
+        int maxDepth = 0;
+        this.startCity.setDepth(1);
+        int[] howManyWrittenInGivenDepth;
+
         City currCity = this.startCity;
         q.add(currCity);
         while(!q.isEmpty()) {
             currCity = q.remove(0);
-            //System.out.println(currCity.getName());
-            //out += currCity.getName() + " ";
-            out += currCity.toString()+ "\n";
-            if(currCity.hasLeftChild()) q.add(currCity.getLeftChild());
-            if(currCity.hasRightChild()) q.add(currCity.getRightChild());
+            maxDepth = Math.max(maxDepth,currCity.getDepth());
+            if(currCity.hasLeftChild()) {
+                q.add(currCity.getLeftChild());
+                currCity.getLeftChild().setDepth(currCity.getDepth()+1);
+            }
+            if(currCity.hasRightChild()) {
+                q.add(currCity.getRightChild());
+                currCity.getRightChild().setDepth(currCity.getDepth()+1);
+            }
+        }
+
+        howManyWrittenInGivenDepth = new int[maxDepth+2];
+        for(int i=1;i<=maxDepth+1;++i) howManyWrittenInGivenDepth[i] = 0;
+
+        if(maxDepth <= 4) {//TODO:dobrze dobrać rozmiar
+            currCity = this.startCity;
+            q.add(currCity);
+            while(!q.isEmpty()) {
+                currCity = q.remove(0);
+                //System.out.println("currCity.getDepth() = " + currCity.getDepth() + ", maxDepth = " + maxDepth);
+                if(currCity.getDepth() == 4) ;//nic nie rób
+                else if(currCity.getDepth() == 3) for(int i=1;i<=4;++i) out += '\t';
+                else if(currCity.getDepth() == 2) for(int i=1;i<=8;++i) out += '\t';
+                else if(currCity.getDepth() == 1) for(int i=1;i<=16;++i) out += '\t';
+                out += currCity.getName();
+                if(currCity.getName().length() < 16) out += '\t';
+                if(currCity.getName().length() < 12) out += '\t';
+                if(currCity.getName().length() < 8) out += '\t';
+                if(currCity.getName().length() < 4) out += '\t';
+                if(++howManyWrittenInGivenDepth[currCity.getDepth()] == currCity.getDepth()) out +='\n';
+
+                if(!currCity.getName().equals("null")) {
+                    if(currCity.hasLeftChild()) q.add(currCity.getLeftChild());
+                    else q.add(new City("null",currCity.getDepth()+1));
+                    if(currCity.hasRightChild()) q.add(currCity.getRightChild());
+                    else q.add(new City("null",currCity.getDepth()+1));
+                }
+            }
+        }
+        else {
+            currCity = this.startCity;
+            q.add(currCity);
+            while(!q.isEmpty()) {
+                currCity = q.remove(0);
+                //System.out.println(currCity.getName());
+                //out += currCity.getName() + " ";
+                out += currCity.toString()+ "\n";
+                if(currCity.hasLeftChild()) q.add(currCity.getLeftChild());
+                if(currCity.hasRightChild()) q.add(currCity.getRightChild());
+            }
         }
         return out;
     }
@@ -274,7 +328,7 @@ public class AvlTree {
             x.setHeight(Math.max(getVertexHeight(x.getLeftChild()),getVertexHeight(x.getRightChild()))+1);
 
             int balance = getVertexHeight(x.getLeftChild())-getVertexHeight(x.getRightChild());
-            if (balance > 1) {
+            if (balance > 1) {//dać inne warunki wewnętrzne!!! zależne od balansu dzieci, a nie od nazwy wierzchołka
                 //System.out.println("currCity = " + currCity.getName() + ",   x.getLeftChild() = " + x.getLeftChild().getName());
                 if (currCity.getName().compareTo(x.getLeftChild().getName()) < 0) {//LL case
                     if (stack.empty()) this.startCity = rightRotation(x);

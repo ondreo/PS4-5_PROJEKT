@@ -16,12 +16,20 @@ public class City implements Comparable<City> {
     private City predecessor;
     private Boolean visited;
 
+    //tree-->toString()
+    private int depth;
+
 
     public City(String name) {
         this.name = name;
         leftChild = rightChild = null;
         this.height = 1;
         adjacentCities = new LinkedList<>();
+    }
+
+    public City(String name,int depth) {//na potrzeby wypisania
+        this.name = name;
+        this.depth = depth;
     }
 
     /*public City(City x) {//konstruktor kopiujący
@@ -128,6 +136,13 @@ public class City implements Comparable<City> {
         this.visited = visited;
     }
 
+    public int getDepth() {
+        return depth;
+    }
+    public void setDepth(int depth) {
+        this.depth = depth;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -149,10 +164,10 @@ public class City implements Comparable<City> {
         String out = "City{" +
                 "name='" + name + '\''
                 + ", leftChild=";
-        if(leftChild!=null) out += leftChild.getName();
+        if(leftChild!=null) out += "'"+leftChild.getName()+"'";
         else out += "null";
         out += ", rightChild=";
-        if(rightChild!=null) out += rightChild.getName();
+        if(rightChild!=null) out += "'"+rightChild.getName()+"'";
         else out += "null";
         out += ", height=" + height +
                 '}';

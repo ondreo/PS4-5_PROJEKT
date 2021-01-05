@@ -115,6 +115,7 @@ public class Graph {
             LinkedList<Road> adjacentCities = currCity.getAdjacentCities();
 
             for(Road road : adjacentCities) {
+                //nie trzeba dawać warunku o odwiedzeniu, bo zdejmujemy z kolejki od razu
                 if(currCity.getDistFromSource() + road.getLength() < road.getDestCity().getDistFromSource()) {
                     road.getDestCity().setDistFromSource(currCity.getDistFromSource() + road.getLength());
                     road.getDestCity().setPredecessor(currCity);
