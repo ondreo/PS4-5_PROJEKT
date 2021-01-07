@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -27,7 +29,7 @@ public class AvlTree {
             if(name.compareTo(currCity.getName()) < 0) {
                 if(currCity.getLeftChild() == null) {
                     currCity.setLeftChild(new City(name));
-                    balanceTheTree(currCity.getLeftChild(), stack);
+                    balanceTheTree(/*currCity.getLeftChild(),*/ stack);
                     ++n;
                     return "TAK";
                 }
@@ -38,7 +40,7 @@ public class AvlTree {
             else if(name.compareTo(currCity.getName()) > 0) {
                 if(currCity.getRightChild() == null) {
                     currCity.setRightChild(new City(name));
-                    balanceTheTree(currCity.getRightChild(), stack);
+                    balanceTheTree(/*currCity.getRightChild(),*/ stack);
                     ++n;
                     return "TAK";
                 }
@@ -111,9 +113,6 @@ public class AvlTree {
         else if(currCity.hasLeftChild() && currCity.hasRightChild()){
             City successor = findSuccessor(currCity);
             String tmp = successor.getName();
-            if(currCity.getName().equals("f")) {
-                //System.out.println("currCity.getName() = " + currCity.getName() + ", successor.getName() = " +successor.getName());
-            }//TODO: to be deleted
             this.removeVertex(successor.getName(),currCity.getName());
             currCity.setName(tmp);
 
@@ -150,10 +149,7 @@ public class AvlTree {
             stack.add(currCity);
         }
 
-        //raczej currCity jest dobrze, ale sprawdzić jeśli będzie błąd
-        //System.out.println("currCity = " + currCity);
-        if(!currCity.getName().equals(predecessorName)) balanceTheTree(currCity,stack);//czy na pewno???????????????????????????????
-        //else System.out.println("currCity = " + currCity);
+        if(!currCity.getName().equals(predecessorName)) balanceTheTree(/*currCity,*/stack);//czy na pewno???????????????????????????????
 
         --n;
         return "TAK";
@@ -178,14 +174,14 @@ public class AvlTree {
 
         if(isItAPrefix(prefix, currCity.getName()) <= 0) {
             counter += countCitiesByPrefix(prefix, currCity.getLeftChild());
-            if(counter > 100)
-                return counter;
+            /*if(counter > 100)
+                return counter;*/
         }
 //        if(prefix.compareTo(currCity.getName()) >= 0) {
         if(isItAPrefix(prefix, currCity.getName()) >= 0) {
             counter += countCitiesByPrefix(prefix, currCity.getRightChild());
-            if(counter > 100)
-                return counter;
+            /*if(counter > 100)
+                return counter;*/
         }
         if(isItAPrefix(prefix, currCity.getName()) == 0) {
             return counter + 1;
@@ -320,17 +316,19 @@ public class AvlTree {
         return out;
     }
 
-    private void balanceTheTree(City currCity, Stack<City>stack) {
+    private void balanceTheTree(/*City currCity, */Stack<City>stack) {
         City x;
         while(!stack.empty()) {
             x = stack.peek();
             stack.pop();
             x.setHeight(Math.max(getVertexHeight(x.getLeftChild()),getVertexHeight(x.getRightChild()))+1);
 
-            int balance = getVertexHeight(x.getLeftChild())-getVertexHeight(x.getRightChild());
-            if (balance > 1) {//dać inne warunki wewnętrzne!!! zależne od balansu dzieci, a nie od nazwy wierzchołka
+            //int balance = getVertexHeight(x.getLeftChild())-getVertexHeight(x.getRightChild());
+            if (getBalance(x) > 1) {//dać inne warunki wewnętrzne!!! zależne od balansu dzieci, a nie od nazwy wierzchołka
                 //System.out.println("currCity = " + currCity.getName() + ",   x.getLeftChild() = " + x.getLeftChild().getName());
-                if (currCity.getName().compareTo(x.getLeftChild().getName()) < 0) {//LL case
+
+                //if (currCity.getName().compareTo(x.getLeftChild().getName()) < 0) {//LL case
+                if (getBalance(x.getLeftChild()) > 0) {//LL case
                     if (stack.empty()) this.startCity = rightRotation(x);
                     else {
                         City ancestor = stack.peek();
@@ -352,8 +350,8 @@ public class AvlTree {
                     }
                 }
             }
-            else if (balance < -1) {
-                if (currCity.getName().compareTo(x.getRightChild().getName()) > 0) {//RR case
+            else if (getBalance(x) < -1) {
+                if (getBalance(x.getRightChild()) < 0) {//RR case
                     if (stack.empty()) this.startCity = leftRotation(x);
                     else {
                         City ancestor = stack.peek();
@@ -372,6 +370,10 @@ public class AvlTree {
                 }
             }
         }
+    }
+
+    private int getBalance(City x) {
+        return getVertexHeight(x.getLeftChild())-getVertexHeight(x.getRightChild());
     }
 
     private int getVertexHeight(City v) {

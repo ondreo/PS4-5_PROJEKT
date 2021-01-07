@@ -13,21 +13,21 @@ public class Main {
     static PrintWriter toFile;
     public static void main(String[] args) throws FileNotFoundException {
         Scanner console = new Scanner(System.in);
-        fromFile = new Scanner(new File("testy/projekt1_in3.txt"));
-        toFile = new PrintWriter(new File("testy/projekt1_out3_moj.txt"));
+        fromFile = new Scanner(new File("testy/projekt1_in4.txt"));
+        toFile = new PrintWriter(new File("testy/projekt1_out4_moj.txt"));
         nrOfAllLines = fromFile.nextInt();
         nrOfReadLines = 0;
         tree = new AvlTree();
         graph = new Graph();
-        /*tree.addVertex("Białystok");
+        tree.addVertex("Białystok");
         tree.addVertex("Kraków");
         tree.addVertex("Krak");
         tree.addVertex("Kraz");
         tree.addVertex("Bełchatow");
         tree.addVertex("Baltoszewo");
         tree.addVertex("Mońki");
-        System.out.println(tree.toString());
-        System.out.println();*/
+        //System.out.println(tree.toString());
+        //System.out.println();
         while(true) {
             //System.out.println("\tjedna tabulacja");
             //System.out.println("\t\tdwie tabulacje");
@@ -94,12 +94,13 @@ public class Main {
                     name = console.next();
                     int tmp = tree.countCitiesByPrefix(name,tree.getStartVertex());
                     System.out.print("W danym drzewie jest: ");
-                    if(tmp <= 100) {
+                    System.out.print(tmp);
+                    /*if(tmp <= 100) {
                         System.out.print(tmp);
                     }
                     else {
-                        System.out.print(100 + "+");
-                    }
+                        System.out.print("100+");
+                    }*/
                     System.out.println(" takich miast");
                     break;
                 case 5:
@@ -175,9 +176,11 @@ public class Main {
                     break;
                 case 11:
                     //wczytywanie wszystkich linii pliku
+                    //long startTime = System.currentTimeMillis();
                     for(int i=0;i<nrOfAllLines;++i) {
                         readLineFromFile();
                     }
+                    //System.out.println("Zajęło to: " + (System.currentTimeMillis() - startTime) + " milisekund.");
                     break;
                 case 12:
                     fromFile.close();
@@ -239,14 +242,16 @@ public class Main {
                 //wypisanie liczby miast o danym prefiksie nazwy
                 name = fromFile.next();
                 int tmp = tree.countCitiesByPrefix(name,tree.getStartVertex());
-                if(tmp <= 100) {
+                toFile.println(tmp);
+                return choice+" "+name+": "+"W danym drzewie jest: "+tmp+" takich miast";
+                /*if(tmp <= 100) {
                     toFile.println(tmp);
                     return choice+" "+name+": "+"W danym drzewie jest: "+tmp+" takich miast";
                 }
                 else {
                     toFile.println("100+");
                     return choice+" "+name+": "+"W danym drzewie jest: 100+ takich miast";
-                }
+                }*/
             case "WY":
                 //wypisanie struktury drzewa
                 String out = tree.toString();
