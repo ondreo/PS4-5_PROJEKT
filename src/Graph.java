@@ -4,7 +4,6 @@ import java.util.Stack;
 
 public class Graph {
     public Graph() {
-        //TODO: sprawdzić jaka to klasa bez zmiennych
     }
 
     /*public String addVertex(String name) {
@@ -13,13 +12,12 @@ public class Graph {
     public String removeVertex(String name) {
         return Main.tree.removeVertex(name);
     }*/
-    //^????^
 
     /**
      *
      * @param cityAName - name of a city A
      * @param cityBName - name of a city B
-     * @param length - length of the road expressed in kilometers
+     * @param length - length of the road expressed in *kilometers*
      * //@return
      */
     public String addRoad(String cityAName, String cityBName, int length) {//długość w kilometrach

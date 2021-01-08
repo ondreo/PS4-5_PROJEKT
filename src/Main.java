@@ -26,12 +26,7 @@ public class Main {
         tree.addVertex("Bełchatow");
         tree.addVertex("Baltoszewo");
         tree.addVertex("Mońki");
-        //System.out.println(tree.toString());
-        //System.out.println();
         while(true) {
-            //System.out.println("\tjedna tabulacja");
-            //System.out.println("\t\tdwie tabulacje");
-            //System.out.println("\t\t\ttrzy tabulacje");
             System.out.println("Co chcesz zrobić?");
             System.out.println("1. Wyszukaj miasto po nazwie");
             System.out.println("2. Dodaj miasto");
@@ -54,7 +49,6 @@ public class Main {
             int length;
 
             String name;
-            //int choice = 0;
             int choice = console.nextInt();
             switch (choice) {
                 case 1:

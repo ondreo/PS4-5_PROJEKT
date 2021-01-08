@@ -254,29 +254,29 @@ public class AvlTree {
         ArrayList<City>q = new ArrayList<>();
         String out = "";
 
-        int maxDepth = 0;
-        this.startCity.setDepth(1);
-        int[] howManyWrittenInGivenDepth;
+        //int maxDepth = 0;
+        //this.startCity.setDepth(1);
+        //int[] howManyWrittenInGivenDepth;
 
         City currCity = this.startCity;
         q.add(currCity);
         while(!q.isEmpty()) {
             currCity = q.remove(0);
-            maxDepth = Math.max(maxDepth,currCity.getDepth());
+            //maxDepth = Math.max(maxDepth,currCity.getDepth());
             if(currCity.hasLeftChild()) {
                 q.add(currCity.getLeftChild());
-                currCity.getLeftChild().setDepth(currCity.getDepth()+1);
+                //currCity.getLeftChild().setDepth(currCity.getDepth()+1);
             }
             if(currCity.hasRightChild()) {
                 q.add(currCity.getRightChild());
-                currCity.getRightChild().setDepth(currCity.getDepth()+1);
+                //currCity.getRightChild().setDepth(currCity.getDepth()+1);
             }
         }
 
-        howManyWrittenInGivenDepth = new int[maxDepth+2];
-        for(int i=1;i<=maxDepth+1;++i) howManyWrittenInGivenDepth[i] = 0;
+        //howManyWrittenInGivenDepth = new int[maxDepth+2];
+        //for(int i=1;i<=maxDepth+1;++i) howManyWrittenInGivenDepth[i] = 0;
 
-        if(maxDepth <= 4) {//TODO:dobrze dobrać rozmiar
+        /*if(maxDepth <= 4) {//TODO:dobrze dobrać rozmiar
             currCity = this.startCity;
             q.add(currCity);
             while(!q.isEmpty()) {
@@ -300,8 +300,8 @@ public class AvlTree {
                     else q.add(new City("null",currCity.getDepth()+1));
                 }
             }
-        }
-        else {
+        }*/
+        //else {
             currCity = this.startCity;
             q.add(currCity);
             while(!q.isEmpty()) {
@@ -312,7 +312,7 @@ public class AvlTree {
                 if(currCity.hasLeftChild()) q.add(currCity.getLeftChild());
                 if(currCity.hasRightChild()) q.add(currCity.getRightChild());
             }
-        }
+        //}
         return out;
     }
 
