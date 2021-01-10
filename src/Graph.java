@@ -98,6 +98,9 @@ public class Graph {
         cityB.removeRoad(cityC);
         cityC.removeRoad(cityB);
         return String.valueOf(compareDistances());
+        /*out = String.valueOf(compareDistances());
+        if(out == "-1") return "100+";
+        else return out;*/
     }
 
     private void dijkstra(City sourceCity) {
@@ -181,6 +184,7 @@ public class Graph {
             x = stack.peek();
             stack.pop();
             if(x.getDistFromSource() < x.getPrevDistFromSource()) ++sum;
+            if(sum>100)return -1;
 
             if(x.hasLeftChild()) stack.add(x.getLeftChild());
             if(x.hasRightChild()) stack.add(x.getRightChild());

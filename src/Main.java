@@ -13,8 +13,8 @@ public class Main {
     static PrintWriter toFile;
     public static void main(String[] args) throws FileNotFoundException {
         Scanner console = new Scanner(System.in);
-        fromFile = new Scanner(new File("testy/projekt1_in7.txt"));
-        toFile = new PrintWriter(new File("testy/projekt1_out7_moj.txt"));
+        fromFile = new Scanner(new File("testy/projekt1_in6.txt"));
+        toFile = new PrintWriter(new File("testy/projekt1_out6_moj.txt"));
         nrOfAllLines = fromFile.nextInt();
         nrOfReadLines = 0;
         tree = new AvlTree();
@@ -185,8 +185,8 @@ public class Main {
                     System.out.println("Wybrałeś niewłaściwą opcję! Spróbuj ponownie!");
                     break;
             }
-            System.out.println("\n\n\n");
             System.out.println("Program wykonał się w: " + (System.currentTimeMillis() - startTime) + " milisekund.");
+            System.out.println("\n\n\n");
         }
     }
     static String readLineFromFile(/*Scanner fromFile,PrintWriter toFile*/) {
@@ -297,7 +297,12 @@ public class Main {
                 length = fromFile.nextInt();
 
                 tmpString = graph.whatIfRoadAdded(a,b,c,length);
-                toFile.println(tmpString);
+                if(tmpString.equals("-1")) {
+                    toFile.println("100+");
+                    return choice+" "+a+" "+b+" "+c+" "+length+": "+"Dodanie tej drogi skróci drogi od A do 100+ miast.";
+                }
+                else toFile.println(tmpString);
+
                 try {
                     return choice+" "+a+" "+b+" "+c+" "+length+": "+"Dodanie tej drogi skróci drogi od A do " + Integer.parseInt(tmpString) + " miast.";
                 }

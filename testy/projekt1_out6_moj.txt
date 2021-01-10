@@ -1,5 +1,5 @@
-Długość najkrótszej ścieżki pomiędzy miastami = 77
-Długość najkrótszej ścieżki pomiędzy miastami = 100
+77
+100
 2
 2
 0
