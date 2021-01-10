@@ -1,6 +1,7 @@
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Stack;
 
 public class AvlTree {
@@ -102,6 +103,17 @@ public class AvlTree {
         if(currCity == null) {
             return "NIE";
         }
+
+
+        //usunięcie wszystkich przyległych dróg://TODO: przetestować
+        LinkedList<Road> adjacentCities = currCity.getAdjacentCities();
+        for(Road road : adjacentCities) {
+            road.getDestCity().removeRoad(currCity);
+            currCity.removeRoad(road.getDestCity());
+        }
+        currCity.setAdjacentCities(adjacentCities);
+
+
         //System.out.println("currCity.getName() = " + currCity.getName());
         if(!currCity.hasChildren()) {
             if(whichChild == "left") parent.setLeftChild(null);
@@ -166,6 +178,7 @@ public class AvlTree {
 
     //static int counter;
     public int countCitiesByPrefix(String prefix, City currCity) {
+        //System.out.println("sjfiasdjifjaisjfsa");
         int counter = 0;
         if(currCity == null) {
             return 0;

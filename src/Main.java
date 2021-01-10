@@ -13,8 +13,8 @@ public class Main {
     static PrintWriter toFile;
     public static void main(String[] args) throws FileNotFoundException {
         Scanner console = new Scanner(System.in);
-        fromFile = new Scanner(new File("testy/projekt1_in4.txt"));
-        toFile = new PrintWriter(new File("testy/projekt1_out4_moj.txt"));
+        fromFile = new Scanner(new File("testy/projekt1_in7.txt"));
+        toFile = new PrintWriter(new File("testy/projekt1_out7_moj.txt"));
         nrOfAllLines = fromFile.nextInt();
         nrOfReadLines = 0;
         tree = new AvlTree();
@@ -50,6 +50,7 @@ public class Main {
 
             String name;
             int choice = console.nextInt();
+            long startTime = System.currentTimeMillis();
             switch (choice) {
                 case 1:
                     //wyszukiwanie miasta (po nazwie - unikalna)
@@ -185,6 +186,7 @@ public class Main {
                     break;
             }
             System.out.println("\n\n\n");
+            System.out.println("Program wykonał się w: " + (System.currentTimeMillis() - startTime) + " milisekund.");
         }
     }
     static String readLineFromFile(/*Scanner fromFile,PrintWriter toFile*/) {
@@ -199,6 +201,7 @@ public class Main {
         String choice = fromFile.next();
         ++nrOfReadLines;
         String name;
+        //System.out.println(nrOfReadLines + "choice: " + choice);
         switch (choice) {
             case "DM":
                 //dodanie nowego miasta
@@ -274,7 +277,16 @@ public class Main {
                 a = fromFile.next();
                 b = fromFile.next();
                 out = graph.findShortestPathBetweenTwoCities(a,b);
-                toFile.println(out);
+                Scanner readFromOut = new Scanner(out);
+                String read;
+                while(readFromOut.hasNext()) {
+                    read = readFromOut.next();
+                    if(read.charAt(0) >= '0' && read.charAt(0) <= '9') {
+                        toFile.println(read);
+                        return out;
+                    }
+                }
+                toFile.println("NIE");
                 return out;
             case "IS":
                 //do ilu miast skróci się długość przejazdu z miasta A, jeżeli wybudowana
